@@ -1,5 +1,5 @@
 # shuaishuai_movie
-基于Provider+MVVM的Flutter 视频App项目,帅帅影视是一个可含有海量视频的app，各大视频网站的付费，会员的视频皆可以在帅帅影视中免费观看
+基于Provider+MVVM的Flutter 视频App项目,帅帅影视是一个可含有海量视频的app。
 
 # 先来点样图
 
