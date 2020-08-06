@@ -25,11 +25,12 @@ void jumpRank(context) {
 }
 
 void jumpIndex(context,
-    {String type = IndexPage.TAB_HOME, clearStack = false}) {
+    {String type = IndexPage.TAB_HOME, clearStack = false, replace = false}) {
   Application.router.navigateTo(
     context,
     Routes.index + "/$type",
     clearStack: clearStack,
+    replace: replace,
     transition: TransitionType.cupertino,
   );
 }
