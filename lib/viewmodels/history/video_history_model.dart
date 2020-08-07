@@ -37,8 +37,7 @@ class VideoHistoryModel extends BaseViewModel {
     SqfProvider.getTables().then((value) => print(value));
     await SqfProvider.db.transaction((txn) async {
       //获取今天的数据
-      var todayVideoHistoryList = await txn.query(
-          videoHistory.tableName,
+      var todayVideoHistoryList = await txn.query(videoHistory.tableName,
           orderBy: 'milliseconds desc',
           where: '${videoHistory.columnMilliseconds}>=?',
           whereArgs: [todayTime]);
@@ -46,18 +45,16 @@ class VideoHistoryModel extends BaseViewModel {
       _todayVideoHistoryList = List.from(todayVideoHistoryList);
 
       //获取昨天的数据
-      var yesterdayVideoHistoryList = await txn.query(
-          videoHistory.tableName,
+      var yesterdayVideoHistoryList = await txn.query(videoHistory.tableName,
           orderBy: 'milliseconds desc',
           where:
-          '${videoHistory.columnMilliseconds}>=? and ${videoHistory.columnMilliseconds}<?',
+              '${videoHistory.columnMilliseconds}>=? and ${videoHistory.columnMilliseconds}<?',
           whereArgs: [todayTime - 1000 * 60 * 60 * 24, todayTime]);
       print(yesterdayVideoHistoryList.length);
       _yesterdayVideoHistoryList = List.from(yesterdayVideoHistoryList);
 
       //获取更早的数据
-      var moreDayVideoHistoryList = await txn.query(
-          videoHistory.tableName,
+      var moreDayVideoHistoryList = await txn.query(videoHistory.tableName,
           orderBy: 'milliseconds desc',
           where: '${videoHistory.columnMilliseconds}<?',
           whereArgs: [todayTime - 1000 * 60 * 60 * 24]);
@@ -192,6 +189,25 @@ class VideoHistoryModel extends BaseViewModel {
     } else {
       setEmpty();
     }
+  }
+
+  dynamic getCurrentItem(int index) {
+    final todayLength =
+        todayVideoHistoryList == null ? 0 : todayVideoHistoryList.length;
+    final yesterdayLength = yesterdayVideoHistoryList == null
+        ? 0
+        : yesterdayVideoHistoryList.length;
+    final moreDayLength =
+        moreDayVideoHistoryList == null ? 0 : moreDayVideoHistoryList.length;
+    var bean;
+    if (index < todayLength) {
+      bean = todayVideoHistoryList[index];
+    } else if (index < todayLength + yesterdayLength) {
+      bean = yesterdayVideoHistoryList[index - todayLength];
+    } else if (index < todayLength + yesterdayLength + moreDayLength) {
+      bean = moreDayVideoHistoryList[index - todayLength - yesterdayLength];
+    }
+    return bean;
   }
 
   //todo 用于测试做的假数据，后期会删掉

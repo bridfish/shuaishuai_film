@@ -180,6 +180,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
         ..picUrl = widget.model.homeDetailBeanVod.vodPic
         ..videoLevel = widget.model.videoLevel
         ..playUrlType = widget.model.playUrlType
+        ..videoUrl = videoUrl
         ..playUrlIndex = int.parse(widget.model.playUrlIndex);
 
       if (videoData != null && videoData.length > 0) {
