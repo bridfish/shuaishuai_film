@@ -43,6 +43,8 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
   void initState() {
     super.initState();
 
+    if (widget.model.currentTime != null)
+      _lastInMilliseconds = int.parse(widget.model.currentTime);
     videoUrl = widget.model.videoUrl.replaceFirst(VideoPage.BASE_VIDEO_URL, "");
 
     _offStageNotifier = ValueNotifier(true);

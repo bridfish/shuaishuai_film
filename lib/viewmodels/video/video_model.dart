@@ -9,8 +9,9 @@ class VideoViewModel extends BaseViewModel<MovieRepository> {
   String playUrlIndex;
   String videoName;
   String videoLevel;
+  String currentTime;
 
-  VideoViewModel({this.videoId, this.videoUrl, this.playUrlType, this.playUrlIndex, this.videoName, this.videoLevel});
+  VideoViewModel({this.videoId, this.videoUrl, this.playUrlType, this.playUrlIndex, this.videoName, this.videoLevel, this.currentTime});
 
   HomeDetailBeanEntity _homeDetailBeanEntity;
 
