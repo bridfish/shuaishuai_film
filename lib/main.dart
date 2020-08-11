@@ -1,19 +1,18 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shuaishuaimovie/database/sqf_provider.dart';
 import 'package:shuaishuaimovie/res/app_color.dart';
-import 'package:shuaishuaimovie/utils/system/system_chrome.dart';
+import 'package:shuaishuaimovie/ui/pages/splash_page.dart';
 import 'package:shuaishuaimovie/viewmodels/app_theme_model.dart';
 import 'package:shuaishuaimovie/provider/provider_setup.dart';
 import 'package:shuaishuaimovie/routes/routes.dart';
 import 'package:shuaishuaimovie/shuai_movie.dart';
 
+import 'utils/system/system_chrome.dart';
+
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
-  SystemChrome.setSystemUIOverlayStyle(MovieSystemChrome.statusDark);
 }
 
 class MyApp extends StatefulWidget {
@@ -51,6 +50,8 @@ class _MyAppState extends State<MyApp> {
           ),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: Application.router.generator,
+          home: AnnotatedRegion(
+              value: MovieSystemChrome.statusDark, child: SplashPage()),
         ),
       ),
     );
