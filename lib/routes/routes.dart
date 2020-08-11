@@ -4,7 +4,7 @@ import 'package:shuaishuaimovie/ui/pages/not_found_page.dart';
 import 'package:shuaishuaimovie/routes/route_handlers.dart';
 
 class Routes {
-  static String splash = '/';
+  static String splash = '/splash';
   static String index = '/index';
   static String home_detail = '/home/detail';
   static String video = '/video';
