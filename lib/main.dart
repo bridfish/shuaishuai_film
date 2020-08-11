@@ -9,6 +9,7 @@ import 'package:shuaishuaimovie/provider/provider_setup.dart';
 import 'package:shuaishuaimovie/routes/routes.dart';
 import 'package:shuaishuaimovie/shuai_movie.dart';
 
+import 'sharepreference/share_preference.dart';
 import 'utils/system/system_chrome.dart';
 
 void main() {
@@ -28,6 +29,7 @@ class _MyAppState extends State<MyApp> {
 
     //初始化数据库
     _initDB();
+    _initSharePreference();
   }
 
   @override
@@ -59,5 +61,12 @@ class _MyAppState extends State<MyApp> {
 
   void _initDB() {
     SqfProvider.initSQF();
+  }
+
+  void _initSharePreference() {
+    //没有找到设置默认值的地方，所以通过判断返回是空的话设置默认值。
+    MovieSharePreference.getAutoPlayValue().then((value) {
+      if (value == null) MovieSharePreference.saveAutoPlayValue(true);
+    });
   }
 }

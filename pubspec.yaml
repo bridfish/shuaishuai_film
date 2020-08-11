@@ -21,6 +21,7 @@ dependencies:
   animated_text_kit: ^2.2.0
   chewie: ^0.9.10
   video_player: ^0.10.11+2
+  shared_preferences: ^0.5.8
 
   r_dart_library:
     git:

@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shuaishuaimovie/database/sqf_provider.dart';
 import 'package:shuaishuaimovie/res/app_color.dart';
+import 'package:shuaishuaimovie/sharepreference/share_preference.dart';
 import 'package:shuaishuaimovie/ui/pages/video/video_page.dart';
 import 'package:shuaishuaimovie/utils/net/net_work.dart';
 import 'package:shuaishuaimovie/viewmodels/video/video_model.dart';
@@ -48,8 +49,11 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
     _offStageNotifier = ValueNotifier(true);
 
     checkNetMobile().then((value) {
-      _initVideo(isAutoPlay: !value);
-
+      return value == false
+          ? MovieSharePreference.getAutoPlayValue()
+          : Future.value(false);
+    }).then((value) {
+      _initVideo(isAutoPlay: value);
       _streamSubscription = Connectivity()
           .onConnectivityChanged
           .listen((ConnectivityResult result) {
@@ -230,7 +234,8 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
     if (videoUrl != newVideoUrl) {
       videoUrl = newVideoUrl;
       _resetChewiePlayer();
-      _initVideo();
+      MovieSharePreference.getAutoPlayValue()
+          .then((value) => _initVideo(isAutoPlay: value));
     }
   }
 }

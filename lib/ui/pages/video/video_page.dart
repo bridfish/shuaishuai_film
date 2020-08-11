@@ -87,7 +87,6 @@ class _VideoPageState extends State<VideoPage> {
         onNoNetworkPressed: () => loadData(model),
       );
     }
-    print(model.playUrlIndex);
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Padding(

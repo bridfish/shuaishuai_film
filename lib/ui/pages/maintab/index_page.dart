@@ -7,6 +7,7 @@ import 'package:shuaishuaimovie/ui/pages/maintab/home/home_page.dart';
 import 'package:shuaishuaimovie/ui/pages/maintab/movie/movie_page.dart';
 import 'package:shuaishuaimovie/ui/pages/maintab/show/show_page.dart';
 import 'package:shuaishuaimovie/ui/pages/maintab/teleplay/teleplay_page.dart';
+import 'package:shuaishuaimovie/ui/pages/mine/mine_page.dart';
 import 'package:shuaishuaimovie/viewmodels/tab/home/index_model.dart';
 import 'package:shuaishuaimovie/widgets/app_bar.dart';
 
@@ -59,7 +60,7 @@ class _IndexPageState extends State<IndexPage> {
       ..add(MoviePage())
       ..add(TeleplayPage())
       ..add(ShowPage())
-      ..add(MoviePage());
+      ..add(MinePage());
   }
 
   @override
@@ -88,7 +89,12 @@ class _IndexPageState extends State<IndexPage> {
       builder: (BuildContext context, IndexModel model, Widget child) {
         return Scaffold(
           backgroundColor: AppColor.black,
-          appBar: child,
+          appBar: model.isShowIndexAppBar
+              ? CustomAppBar(
+                  contentHeight: 50,
+                  backgroundColor: Colors.white,
+                )
+              : null,
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: model.navBarCurrentIndex,
             type: BottomNavigationBarType.fixed,
