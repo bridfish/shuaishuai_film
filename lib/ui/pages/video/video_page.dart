@@ -14,7 +14,9 @@ class VideoPage extends StatefulWidget {
       @required this.videoName,
       @required this.videoLevel,
       @required this.playUrlType,
-      @required this.playUrlIndex});
+      @required this.playUrlIndex,
+        this.currentTime,
+      });
 
   String videoId;
   String videoUrl;
@@ -22,6 +24,7 @@ class VideoPage extends StatefulWidget {
   String playUrlIndex;
   String videoName;
   String videoLevel;
+  String currentTime;
 
   static const String BASE_VIDEO_URL = "https://vip1.sp-flv.com/p2p/?v=";
 
@@ -62,6 +65,7 @@ class _VideoPageState extends State<VideoPage> {
               playUrlIndex: widget.playUrlIndex,
               videoName: widget.videoName,
               videoLevel: widget.videoLevel,
+              currentTime: widget.currentTime,
             ),
             builder:
                 (BuildContext context, VideoViewModel model, Widget child) {

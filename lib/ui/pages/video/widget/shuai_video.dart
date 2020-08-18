@@ -44,6 +44,9 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
   void initState() {
     super.initState();
 
+    if (widget.model.currentTime?.isNotEmpty ?? false)
+      _lastInMilliseconds = int.parse(widget.model.currentTime);
+
     videoUrl = widget.model.videoUrl.replaceFirst(VideoPage.BASE_VIDEO_URL, "");
 
     _offStageNotifier = ValueNotifier(true);
@@ -82,7 +85,6 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
   }
 
   void _initChewie({bool isAutoPlay = true}) {
-    print("shuaishuai......" + videoUrl);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       aspectRatio: 16 / 9,
@@ -90,7 +92,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
       looping: false,
       showControls: true,
       allowedScreenSleep: false,
-      startAt: Duration(microseconds: _lastInMilliseconds),
+      startAt: Duration(milliseconds: _lastInMilliseconds),
       customControls: CustomControls(
           title: widget.model.videoName + " " + widget.model.videoLevel),
       materialProgressColors: ChewieProgressColors(
@@ -184,6 +186,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
         ..picUrl = widget.model.homeDetailBeanVod.vodPic
         ..videoLevel = widget.model.videoLevel
         ..playUrlType = widget.model.playUrlType
+        ..videoUrl = videoUrl
         ..playUrlIndex = int.parse(widget.model.playUrlIndex);
 
       if (videoData != null && videoData.length > 0) {
