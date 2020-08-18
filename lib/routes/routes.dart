@@ -27,7 +27,7 @@ class Routes {
     //type为0,1,2,3,4分别对应底部的tab。
     router.define(index + "/:type", handler: indexHandler);
     router.define(home_detail + "/:id/:imageUrl", handler: homeDetailHandler);
-    router.define(video + "/:videoId/:videoUrl/:playUrlType/:playUrlIndex/:videoName/:videoLevel", handler: videoHandler);
+    router.define(video + "/:videoId/:videoUrl/:playUrlType/:playUrlIndex/:videoName/:videoLevel/:currentTime", handler: videoHandler);
     router.define(hot_update, handler: hotUpdateHandler);
     router.define(rank, handler: rankHandler);
     router.define(cartoon, handler: cartoonHandler);

@@ -41,17 +41,18 @@ void jumpCartoon(context) {
   );
 }
 
-void jumpVideo(context,
+jumpVideo(context,
     {String videoId,
     String videoUrl,
     String playUrlType,
     String playUrlIndex,
     String videoName,
-    String videoLevel}) {
+    String videoLevel,
+    String currentTime = ""}) {
   Application.router.navigateTo(
     context,
     Routes.video +
-        "/$videoId/${Uri.encodeComponent(videoUrl)}/$playUrlType/$playUrlIndex/$videoName/$videoLevel",
+        "/$videoId/${Uri.encodeComponent(videoUrl)}/$playUrlType/$playUrlIndex/$videoName/$videoLevel/$currentTime",
     transition: TransitionType.cupertino,
   );
 }

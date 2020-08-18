@@ -84,68 +84,68 @@ class _VideoHistoryPageState extends State<VideoHistoryPage>
       children: <Widget>[
         model.isSuccess()
             ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: CustomScrollView(
-                  physics: BouncingScrollPhysics(),
-                  slivers: <Widget>[
-                    //今天的历史数据
-                    if (model.todayVideoHistoryList.length > 0)
-                      StickyHeaderList(
-                        title: "今天",
-                        sliver: VideoHistoryList(
-                          model: model,
-                          animation: _animation,
-                          list: model.todayVideoHistoryList,
-                          startIndex: 0,
-                          onCheckTap: () {
-                            _updateDelWidget(model);
-                          },
-                        ),
-                      ),
-
-                    //昨天的历史数据
-                    if (model.yesterdayVideoHistoryList.length > 0)
-                      StickyHeaderList(
-                        title: "昨天",
-                        sliver: VideoHistoryList(
-                          model: model,
-                          animation: _animation,
-                          list: model.yesterdayVideoHistoryList,
-                          startIndex: model.todayVideoHistoryList.length,
-                          onCheckTap: () {
-                            _updateDelWidget(model);
-                          },
-                        ),
-                      ),
-
-                    //更多天的历史数据
-                    if (model.moreDayVideoHistoryList.length > 0)
-                      StickyHeaderList(
-                        title: "更多",
-                        sliver: VideoHistoryList(
-                          model: model,
-                          animation: _animation,
-                          list: model.moreDayVideoHistoryList,
-                          startIndex: model.todayVideoHistoryList.length +
-                              model.yesterdayVideoHistoryList.length,
-                          onCheckTap: () {
-                            _updateDelWidget(model);
-                          },
-                        ),
-                      ),
-
-                    //占位，防止删除的组件出来之后将list遮挡住
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 40,
-                      ),
-                    ),
-                  ],
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: <Widget>[
+              //今天的历史数据
+              if (model.todayVideoHistoryList.length > 0)
+                StickyHeaderList(
+                  title: "今天",
+                  sliver: VideoHistoryList(
+                    model: model,
+                    animation: _animation,
+                    list: model.todayVideoHistoryList,
+                    startIndex: 0,
+                    onCheckTap: () {
+                      _updateDelWidget(model);
+                    },
+                  ),
                 ),
-              )
-            : CommonViewStateHelper(
-                model: model,
+
+              //昨天的历史数据
+              if (model.yesterdayVideoHistoryList.length > 0)
+                StickyHeaderList(
+                  title: "昨天",
+                  sliver: VideoHistoryList(
+                    model: model,
+                    animation: _animation,
+                    list: model.yesterdayVideoHistoryList,
+                    startIndex: model.todayVideoHistoryList.length,
+                    onCheckTap: () {
+                      _updateDelWidget(model);
+                    },
+                  ),
+                ),
+
+              //更多天的历史数据
+              if (model.moreDayVideoHistoryList.length > 0)
+                StickyHeaderList(
+                  title: "更多",
+                  sliver: VideoHistoryList(
+                    model: model,
+                    animation: _animation,
+                    list: model.moreDayVideoHistoryList,
+                    startIndex: model.todayVideoHistoryList.length +
+                        model.yesterdayVideoHistoryList.length,
+                    onCheckTap: () {
+                      _updateDelWidget(model);
+                    },
+                  ),
+                ),
+
+              //占位，防止删除的组件出来之后将list遮挡住
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 40,
+                ),
               ),
+            ],
+          ),
+        )
+            : CommonViewStateHelper(
+          model: model,
+        ),
 
         //过滤组件
         Positioned(
@@ -204,9 +204,9 @@ class _VideoHistoryPageState extends State<VideoHistoryPage>
                             behavior: HitTestBehavior.opaque,
                             onTap: value > 0
                                 ? () {
-                                    model.delCheckedData();
-                                    _operateEdit(model);
-                                  }
+                              model.delCheckedData();
+                              _operateEdit(model);
+                            }
                                 : null,
                             child: Container(
                               foregroundDecoration: BoxDecoration(

@@ -107,8 +107,8 @@ class _VideoHistoryItemState extends State<VideoHistoryItem> {
             playUrlIndex: bean[videoHistory.columnPlayUrlIndex].toString(),
             videoName: bean[videoHistory.columnVideoName],
             videoLevel: bean[videoHistory.columnVideoLevel],
+            currentTime: bean[videoHistory.columnCurrentPlayTime].toString(),
           );
-
         }
       },
       child: Row(

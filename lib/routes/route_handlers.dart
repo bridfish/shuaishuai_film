@@ -67,6 +67,7 @@ var videoHandler = Handler(
   var playUrlIndex = params["playUrlIndex"][0];
   var videoName = params["videoName"][0];
   var videoLevel = params["videoLevel"][0];
+  var currentTime = params["currentTime"][0];
   return VideoPage(
     videoId: videoId,
     videoUrl: videoUrl,
@@ -74,6 +75,7 @@ var videoHandler = Handler(
     videoLevel: videoLevel,
     playUrlType: playUrlType,
     playUrlIndex: playUrlIndex,
+    currentTime: currentTime,
   );
 });
 

@@ -19,7 +19,7 @@ class HomeContentHeaderWidget extends StatelessWidget {
     return Column(
       children: <Widget>[
         HomeMovieModuleWidget(),
-        HomeNotificationWidget(),
+//        HomeNotificationWidget(),
       ],
     );
   }
