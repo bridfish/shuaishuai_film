@@ -56,7 +56,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
           ? MovieSharePreference.getAutoPlayValue()
           : Future.value(false);
     }).then((value) {
-      _initVideo(isAutoPlay: value);
+      _initVideo(isAutoPlay: value, lastMill: _lastInMilliseconds);
       _streamSubscription = Connectivity()
           .onConnectivityChanged
           .listen((ConnectivityResult result) {
@@ -69,7 +69,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
     });
   }
 
-  Future _initVideo({bool isAutoPlay = true}) async {
+  Future _initVideo({bool isAutoPlay = true, int lastMill = 0}) async {
     final videoPlayerController = VideoPlayerController.network(videoUrl);
     final old = _videoPlayerController;
     _videoPlayerController = videoPlayerController;
@@ -79,12 +79,12 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
     }
 
     setState(() {
-      _initChewie(isAutoPlay: isAutoPlay);
+      _initChewie(isAutoPlay, lastMill);
       _videoPlayerController.addListener(_playerPositionListener);
     });
   }
 
-  void _initChewie({bool isAutoPlay = true}) {
+  void _initChewie(bool isAutoPlay, int lastMill) {
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       aspectRatio: 16 / 9,
@@ -92,7 +92,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
       looping: false,
       showControls: true,
       allowedScreenSleep: false,
-      startAt: Duration(milliseconds: _lastInMilliseconds),
+      startAt: Duration(milliseconds: lastMill),
       customControls: CustomControls(
           title: widget.model.videoName + " " + widget.model.videoLevel),
       materialProgressColors: ChewieProgressColors(
@@ -108,7 +108,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
         return CustomChewieOverlayWidget(
           onTap: () {
             setState(() {
-              _initVideo();
+              _initVideo(lastMill: _lastInMilliseconds);
             });
           },
           tapMsg: "点击重试",
