@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shuaishuaimovie/database/sqf_provider.dart';
 import 'package:shuaishuaimovie/res/app_color.dart';
+import 'package:shuaishuaimovie/sharepreference/share_preference.dart';
 import 'package:shuaishuaimovie/ui/pages/video/video_page.dart';
 import 'package:shuaishuaimovie/utils/net/net_work.dart';
 import 'package:shuaishuaimovie/viewmodels/video/video_model.dart';
@@ -43,13 +44,19 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
   void initState() {
     super.initState();
 
+    if (widget.model.currentTime?.isNotEmpty ?? false)
+      _lastInMilliseconds = int.parse(widget.model.currentTime);
+
     videoUrl = widget.model.videoUrl.replaceFirst(VideoPage.BASE_VIDEO_URL, "");
 
     _offStageNotifier = ValueNotifier(true);
 
     checkNetMobile().then((value) {
-      _initVideo(isAutoPlay: !value);
-
+      return value == false
+          ? MovieSharePreference.getAutoPlayValue()
+          : Future.value(false);
+    }).then((value) {
+      _initVideo(isAutoPlay: value, lastMill: _lastInMilliseconds);
       _streamSubscription = Connectivity()
           .onConnectivityChanged
           .listen((ConnectivityResult result) {
@@ -62,7 +69,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
     });
   }
 
-  Future _initVideo({bool isAutoPlay = true}) async {
+  Future _initVideo({bool isAutoPlay = true, int lastMill = 0}) async {
     final videoPlayerController = VideoPlayerController.network(videoUrl);
     final old = _videoPlayerController;
     _videoPlayerController = videoPlayerController;
@@ -72,13 +79,12 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
     }
 
     setState(() {
-      _initChewie(isAutoPlay: isAutoPlay);
+      _initChewie(isAutoPlay, lastMill);
       _videoPlayerController.addListener(_playerPositionListener);
     });
   }
 
-  void _initChewie({bool isAutoPlay = true}) {
-    print("shuaishuai......" + videoUrl);
+  void _initChewie(bool isAutoPlay, int lastMill) {
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       aspectRatio: 16 / 9,
@@ -86,7 +92,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
       looping: false,
       showControls: true,
       allowedScreenSleep: false,
-      startAt: Duration(microseconds: _lastInMilliseconds),
+      startAt: Duration(milliseconds: lastMill),
       customControls: CustomControls(
           title: widget.model.videoName + " " + widget.model.videoLevel),
       materialProgressColors: ChewieProgressColors(
@@ -102,7 +108,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
         return CustomChewieOverlayWidget(
           onTap: () {
             setState(() {
-              _initVideo();
+              _initVideo(lastMill: _lastInMilliseconds);
             });
           },
           tapMsg: "点击重试",
@@ -180,6 +186,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
         ..picUrl = widget.model.homeDetailBeanVod.vodPic
         ..videoLevel = widget.model.videoLevel
         ..playUrlType = widget.model.playUrlType
+        ..videoUrl = videoUrl
         ..playUrlIndex = int.parse(widget.model.playUrlIndex);
 
       if (videoData != null && videoData.length > 0) {
@@ -230,7 +237,8 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
     if (videoUrl != newVideoUrl) {
       videoUrl = newVideoUrl;
       _resetChewiePlayer();
-      _initVideo();
+      MovieSharePreference.getAutoPlayValue()
+          .then((value) => _initVideo(isAutoPlay: value));
     }
   }
 }

@@ -19,6 +19,7 @@ class HomeContentHeaderWidget extends StatelessWidget {
     return Column(
       children: <Widget>[
         HomeMovieModuleWidget(),
+//写的跑马灯组件性能上有问题，目前还在调查，所以先将它关闭
         HomeNotificationWidget(),
       ],
     );

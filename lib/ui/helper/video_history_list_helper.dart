@@ -5,6 +5,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:shuaishuaimovie/database/bean/video_history_bean.dart'
     as videoHistory;
 import 'package:shuaishuaimovie/res/app_color.dart';
+import 'package:shuaishuaimovie/routes/route_jump.dart';
 import 'package:shuaishuaimovie/viewmodels/history/video_history_model.dart';
 import 'package:shuaishuaimovie/widgets/custom_progress_paint.dart';
 import 'package:shuaishuaimovie/widgets/text_widget.dart';
@@ -33,12 +34,13 @@ class StickyHeaderList extends StatelessWidget {
 }
 
 class VideoHistoryList extends StatelessWidget {
-  VideoHistoryList(
-      {this.model,
-      this.list,
-      this.animation,
-      this.startIndex = 0,
-      this.onCheckTap});
+  VideoHistoryList({
+    this.model,
+    this.list,
+    this.animation,
+    this.startIndex = 0,
+    this.onCheckTap,
+  });
 
   List<Map<String, dynamic>> list;
   Animation<double> animation;
@@ -70,7 +72,7 @@ class VideoHistoryItem extends StatefulWidget {
       this.bean,
       this.animation,
       this.startIndex = 0,
-      this.onCheckTap});
+      this.onCheckTap,});
 
   Map<String, dynamic> bean;
   Animation<double> animation;
@@ -96,7 +98,17 @@ class _VideoHistoryItemState extends State<VideoHistoryItem> {
           widget.onCheckTap();
         } else {
           //点击跳转
-          print("video_history_jump${widget.startIndex}");
+          var  bean = widget.model.getCurrentItem(widget.startIndex);
+          jumpVideo(
+            context,
+            videoId: bean[videoHistory.columnVideoId].toString(),
+            videoUrl: bean[videoHistory.columnVideoUrl],
+            playUrlType: bean[videoHistory.columnPlayUrlType],
+            playUrlIndex: bean[videoHistory.columnPlayUrlIndex].toString(),
+            videoName: bean[videoHistory.columnVideoName],
+            videoLevel: bean[videoHistory.columnVideoLevel],
+            currentTime: bean[videoHistory.columnCurrentPlayTime].toString(),
+          );
         }
       },
       child: Row(
@@ -205,7 +217,7 @@ class _VideoHistoryItemState extends State<VideoHistoryItem> {
     int currentPlayTime = map[videoHistory.columnCurrentPlayTime];
     int totalPlayTime = map[videoHistory.columnTotalPlayTime];
     //默认还剩下十秒代表播放完成
-    if(currentPlayTime > totalPlayTime - 5 * 1000) return 100;
+    if (currentPlayTime > totalPlayTime - 5 * 1000) return 100;
     return (currentPlayTime * 100 / totalPlayTime.toDouble()).floor();
   }
 }

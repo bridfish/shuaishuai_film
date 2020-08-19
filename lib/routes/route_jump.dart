@@ -1,10 +1,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shuaishuaimovie/routes/routes.dart';
 import 'package:shuaishuaimovie/shuai_movie.dart';
 import 'package:shuaishuaimovie/ui/pages/maintab/index_page.dart';
-import 'package:shuaishuaimovie/utils/system/system_chrome.dart';
 import 'package:shuaishuaimovie/widgets/clip_widget.dart';
 
 void jumpHomeDetail(context, String vodId, String imageUrl, {replace = false}) {
@@ -25,11 +23,12 @@ void jumpRank(context) {
 }
 
 void jumpIndex(context,
-    {String type = IndexPage.TAB_HOME, clearStack = false}) {
+    {String type = IndexPage.TAB_HOME, clearStack = false, replace = false}) {
   Application.router.navigateTo(
     context,
     Routes.index + "/$type",
     clearStack: clearStack,
+    replace: replace,
     transition: TransitionType.cupertino,
   );
 }
@@ -42,17 +41,18 @@ void jumpCartoon(context) {
   );
 }
 
-void jumpVideo(context,
+jumpVideo(context,
     {String videoId,
     String videoUrl,
     String playUrlType,
     String playUrlIndex,
     String videoName,
-    String videoLevel}) {
+    String videoLevel,
+    String currentTime = ""}) {
   Application.router.navigateTo(
     context,
     Routes.video +
-        "/$videoId/${Uri.encodeComponent(videoUrl)}/$playUrlType/$playUrlIndex/$videoName/$videoLevel",
+        "/$videoId/${Uri.encodeComponent(videoUrl)}/$playUrlType/$playUrlIndex/$videoName/$videoLevel/$currentTime",
     transition: TransitionType.cupertino,
   );
 }
