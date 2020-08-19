@@ -17,13 +17,19 @@
 | video_player  | 视频播放 |https://github.com/flutter/plugins/tree/master/packages/video_player|
 | chewie  | 视频播放 | https://github:com/brianegan/chewie |
 |  fluro  | 路由跳转 | https://github.com/theyakka/fluro |
-|  connectivity  | 网络变化监听 | https://github.com/tekartik/sqflite |
+|  connectivity  | 网络变化监听 | https://pub.dev/packages/connectivity |
 |  flutter_easyrefresh  | 上拉加载下拉刷新 | https://github.com/xuelongqy/flutter_easyrefresh |
 |  flutter_sticky_header  | 粘性头部 | https://github.com/letsar/flutter_sticky_header |
 |  cached_network_image  | 图片缓存 | https://github.com/Baseflow/flutter_cached_network_image |
 |  fluttertoast  | 吐司 | https://github.com/ponnamkarthik/FlutterToast |
+|  shared_preferences  | shared存储 | https://pub.dev/packages?q=shared_preferences |
 
 # 更新
+## V1.0.0 `2020-08-19` 
+- 添加留言模块
+- 添加历史记录可以点击继续观看功能
+- 添加控制视频是否自动播放功能
+- 添加启动页闪屏动画功能
 
 ## V0.0.1 `2020-08-04` 
 - 帅帅影视的基本功能已完成
