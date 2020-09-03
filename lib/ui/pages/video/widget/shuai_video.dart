@@ -1,20 +1,19 @@
 import 'dart:async';
 
-import 'package:chewie/chewie.dart';
-import 'package:chewie/src/chewie_player.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:fijkplayer/fijkplayer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shuaishuaimovie/database/sqf_provider.dart';
 import 'package:shuaishuaimovie/res/app_color.dart';
 import 'package:shuaishuaimovie/sharepreference/share_preference.dart';
+import 'package:shuaishuaimovie/shuai_movie.dart';
 import 'package:shuaishuaimovie/ui/pages/video/video_page.dart';
 import 'package:shuaishuaimovie/utils/net/net_work.dart';
+import 'package:shuaishuaimovie/video/custom_video_panel.dart';
 import 'package:shuaishuaimovie/viewmodels/video/video_model.dart';
 import 'package:shuaishuaimovie/widgets/custom_chewie_overlay_widget.dart';
-import 'package:shuaishuaimovie/widgets/custom_controls.dart';
-import 'package:video_player/video_player.dart';
 import 'package:shuaishuaimovie/database/bean/video_history_bean.dart'
     as videoHistory;
 
@@ -30,145 +29,109 @@ class ShuaiVideo extends StatefulWidget {
 }
 
 class _ShuaiVideoState extends State<ShuaiVideo> {
+  FijkPlayer _fijkPlayer;
   StreamSubscription _streamSubscription;
-  VideoPlayerController _videoPlayerController;
-  ChewieController _chewieController;
-
   int _lastInMilliseconds = 0;
   int _totalInMilliseconds;
   bool _isAllowMobilePlay = false;
-  ValueNotifier<bool> _offStageNotifier;
+  ValueNotifier<bool> _offStageNotifier = ValueNotifier(true);
   String videoUrl;
 
   @override
   void initState() {
     super.initState();
+    videoUrl = widget.model.videoUrl.replaceFirst(VideoPage.BASE_VIDEO_URL, "");
 
     if (widget.model.currentTime?.isNotEmpty ?? false)
       _lastInMilliseconds = int.parse(widget.model.currentTime);
 
-    videoUrl = widget.model.videoUrl.replaceFirst(VideoPage.BASE_VIDEO_URL, "");
-
-    _offStageNotifier = ValueNotifier(true);
-
-    checkNetMobile().then((value) {
-      return value == false
-          ? MovieSharePreference.getAutoPlayValue()
-          : Future.value(false);
-    }).then((value) {
-      _initVideo(isAutoPlay: value, lastMill: _lastInMilliseconds);
-      _streamSubscription = Connectivity()
-          .onConnectivityChanged
-          .listen((ConnectivityResult result) {
-        if (result == ConnectivityResult.mobile) {
-          _unWifiEnvironment();
-        } else if (result == ConnectivityResult.wifi) {
-          _wifiEnvironment();
-        }
-      });
+    _streamSubscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.mobile) {
+        _startPlayer(wifiStatus: false);
+      } else if (result == ConnectivityResult.wifi) {
+        _startPlayer(wifiStatus: true);
+      }
     });
   }
 
-  Future _initVideo({bool isAutoPlay = true, int lastMill = 0}) async {
-    final videoPlayerController = VideoPlayerController.network(videoUrl);
-    final old = _videoPlayerController;
-    _videoPlayerController = videoPlayerController;
-    if (old != null) {
-      old.removeListener(_playerPositionListener);
-      await old.pause();
+  Future _startPlayer({bool wifiStatus = false}) async {
+    var autoPlay = false;
+    //我的页面在wifi的情况下也可以进行控制设置
+    if (wifiStatus) autoPlay = await MovieSharePreference.getAutoPlayValue();
+
+    if (_fijkPlayer == null) {
+      _fijkPlayer = FijkPlayer();
+      //设置视频资源
+      await _fijkPlayer.setDataSource(videoUrl,
+          autoPlay: autoPlay, showCover: true);
+
+      _fijkPlayer.addListener(_addVideoListener);
+
+      setState(() {});
+    } else {
+      if (!_isAllowMobilePlay) _playOrPause();
     }
 
-    setState(() {
-      _initChewie(isAutoPlay, lastMill);
-      _videoPlayerController.addListener(_playerPositionListener);
-    });
+    //非wifi情况下必须暂停播放, 提示用户信息
+    if (!_isAllowMobilePlay &&
+        !wifiStatus &&
+        _offStageNotifier.value != autoPlay) _offStageNotifier.value = autoPlay;
   }
 
-  void _initChewie(bool isAutoPlay, int lastMill) {
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      aspectRatio: 16 / 9,
-      autoPlay: isAutoPlay,
-      looping: false,
-      showControls: true,
-      allowedScreenSleep: false,
-      startAt: Duration(milliseconds: lastMill),
-      customControls: CustomControls(
-          title: widget.model.videoName + " " + widget.model.videoLevel),
-      materialProgressColors: ChewieProgressColors(
-        playedColor: AppColor.icon_yellow,
-        handleColor: AppColor.icon_yellow,
-        backgroundColor: Colors.grey,
-        bufferedColor: AppColor.icon_yellow.withOpacity(.5),
-      ),
-      placeholder: Container(
-        color: Colors.black,
-      ),
-      errorBuilder: (context, error) {
-        return CustomChewieOverlayWidget(
-          onTap: () {
-            setState(() {
-              _initVideo(lastMill: _lastInMilliseconds);
-            });
-          },
-          tapMsg: "点击重试",
-          tipsMsg: "视频加载失败， 请稍后再试",
-        );
-      },
-      autoInitialize: true,
-    );
+  void _addVideoListener() {
+    if (_fijkPlayer.state == FijkState.prepared) {
+      _fijkPlayer.seekTo(_lastInMilliseconds ?? 0);
+    }
+
+    _totalInMilliseconds = _fijkPlayer.value.duration?.inMilliseconds;
+    final currentMilliseconds = _fijkPlayer.currentPos.inMilliseconds;
+    if (currentMilliseconds > _lastInMilliseconds) {
+      _lastInMilliseconds = currentMilliseconds;
+    }
   }
 
-  void _resetChewiePlayer() {
+  void _playOrPause() {
+    if (_fijkPlayer.isPlayable() ||
+        _fijkPlayer.state == FijkState.asyncPreparing) {
+      if (_fijkPlayer.state == FijkState.started) {
+        _fijkPlayer.pause();
+      } else {
+        _fijkPlayer.start();
+      }
+    }
+  }
+
+  void _resetFijkPlayer() {
     _isAllowMobilePlay = false;
     _lastInMilliseconds = 0;
     _totalInMilliseconds = null;
     _offStageNotifier.value = true;
+    _destoryFijkPlayer();
   }
 
-  void _wifiEnvironment() {
-    if (!_videoPlayerController.value.isPlaying && !_offStageNotifier.value) {
-      _chewieController.play();
-      _offStageNotifier.value = true;
-    }
-  }
-
-  void _unWifiEnvironment() {
-    if (_isAllowMobilePlay) return;
-    _chewieController.pause();
-    _offStageNotifier.value = false;
+  void _destoryFijkPlayer() {
+    _fijkPlayer?.removeListener(_addVideoListener);
+    _fijkPlayer?.release();
+    _fijkPlayer = null;
   }
 
   void _allowUnWifiEnvironmentPlay() {
-    _wifiEnvironment();
     _isAllowMobilePlay = true;
-  }
-
-  Future _playerPositionListener() async {
-    //总进度保存
-    if (_totalInMilliseconds == null) {
-      _totalInMilliseconds =
-          _videoPlayerController.value.duration?.inMilliseconds;
-    }
-    final position = await _videoPlayerController.position;
-    if (position.inMicroseconds > _lastInMilliseconds) {
-      _lastInMilliseconds = position.inMilliseconds;
-    }
+    _playOrPause();
   }
 
   @override
   void dispose() {
-    //进行数据的保存
-    _storePlay();
-    _videoPlayerController.dispose();
+    _destoryFijkPlayer();
     _offStageNotifier.dispose();
     _streamSubscription.cancel();
     super.dispose();
   }
 
   void _storePlay() async {
-    if (_totalInMilliseconds == null ||
-        !_videoPlayerController.value.initialized) return;
+    if (_totalInMilliseconds == null) return;
     print("store");
     await SqfProvider.db.transaction((txn) async {
       final videoData = await txn.query(videoHistory.tableName,
@@ -205,10 +168,26 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
       aspectRatio: 16 / 9,
       child: Stack(
         children: <Widget>[
-          if (_chewieController != null && _videoPlayerController != null)
-            Chewie(
-              controller: _chewieController,
-            ),
+          _fijkPlayer == null
+              ? Container(
+                  color: AppColor.black,
+                )
+              : FijkView(
+                  player: _fijkPlayer,
+                  fit: FijkFit.ar16_9,
+                  fsFit: FijkFit.ar16_9,
+                  color: AppColor.black,
+                  panelBuilder: fijkCustomerPanelBuilder(
+                      snapShot: true,
+                      title: widget.model.videoTitle,
+                      onBack: () {
+                        Application.router.pop(context);
+                      }),
+                  onDispose: (fijkData) {
+                    //进行数据的保存
+                    _storePlay();
+                  },
+                ),
           ValueListenableBuilder(
             valueListenable: _offStageNotifier,
             builder: (BuildContext context, bool value, Widget child) {
@@ -236,9 +215,9 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
         widget.model.videoUrl.replaceFirst(VideoPage.BASE_VIDEO_URL, "");
     if (videoUrl != newVideoUrl) {
       videoUrl = newVideoUrl;
-      _resetChewiePlayer();
-      MovieSharePreference.getAutoPlayValue()
-          .then((value) => _initVideo(isAutoPlay: value));
+
+      _resetFijkPlayer();
+      checkNetWifi().then((value) => _startPlayer(wifiStatus: value));
     }
   }
 }

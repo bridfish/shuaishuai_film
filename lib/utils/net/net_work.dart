@@ -13,6 +13,11 @@ Future<bool> checkNetMobile() async {
    return connectivityResult == ConnectivityResult.mobile;
 }
 
+Future<bool> checkNetWifi() async {
+ var connectivityResult = await (Connectivity().checkConnectivity());
+ return connectivityResult == ConnectivityResult.wifi;
+}
+
 
 
 
