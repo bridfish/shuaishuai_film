@@ -9,6 +9,8 @@ import 'package:shuaishuaimovie/ui/helper/home_detail_list_helper.dart';
 import 'package:shuaishuaimovie/viewmodels/tab/home/home_detail_model.dart';
 import 'package:shuaishuaimovie/widgets/text_widget.dart';
 
+typedef Value2Changed<T> = void Function(T value, bool flag);
+
 class SelectionBean {
   String name;
   String url;
@@ -54,11 +56,13 @@ class HomeDetailBackGroundWidget extends StatelessWidget {
 
 class MovieSelectionModuleWidget extends StatefulWidget {
   MovieSelectionModuleWidget(this.playUrls,
-      {this.onAssembleTap, this.selectedIndex});
+      {this.onAssembleTap, this.onSortTap, this.selectedIndex, this.isPositive = "0"});
 
   List<List> playUrls;
   int selectedIndex;
-  ValueChanged onAssembleTap;
+  String isPositive;
+  Value2Changed onAssembleTap;
+  ValueChanged onSortTap;
 
   @override
   _MovieSelectionModuleWidgetState createState() =>
@@ -129,6 +133,8 @@ class _MovieSelectionModuleWidgetState
           playUrls: widget.playUrls,
           selectedIndex: widget.selectedIndex,
           onAssembleTap: widget.onAssembleTap,
+          onSortTap: widget.onSortTap,
+          isPositive: widget.isPositive,
         ),
       ],
     );
@@ -268,15 +274,20 @@ class _MovieSelectionTileState extends State<MovieSelectionTile>
 }
 
 class MovieSelectionList extends StatefulWidget {
-  MovieSelectionList(
-      {Key key,
-      @required this.playUrls,
-      this.onAssembleTap,
-      this.selectedIndex})
-      : super(key: key);
+  MovieSelectionList({
+    Key key,
+    @required this.playUrls,
+    @required this.isPositive,
+    this.onAssembleTap,
+    this.onSortTap,
+    this.selectedIndex,
+  }) : super(key: key);
+
   List<List> playUrls;
-  ValueChanged onAssembleTap;
+  Value2Changed onAssembleTap;
+  ValueChanged onSortTap;
   int selectedIndex;
+  String isPositive;
 
   @override
   _MovieSelectionListState createState() => _MovieSelectionListState();
@@ -289,6 +300,7 @@ class _MovieSelectionListState extends State<MovieSelectionList> {
 
   @override
   Widget build(BuildContext context) {
+    isPositive = widget.isPositive == "0" ? false : true;
     playUrls =
         isPositive ? widget.playUrls?.reversed?.toList() : widget.playUrls;
 
@@ -340,7 +352,7 @@ class _MovieSelectionListState extends State<MovieSelectionList> {
   Widget _selectionBtnWidget(SelectionBean selectionBean, int playUrlIndex) {
     return GestureDetector(
       onTap: () {
-        widget.onAssembleTap(playUrlIndex);
+        widget.onAssembleTap(playUrlIndex, isPositive);
       },
       child: Container(
         alignment: Alignment.center,
@@ -379,6 +391,7 @@ class _MovieSelectionListState extends State<MovieSelectionList> {
   void reversedSelection() {
     setState(() {
       isPositive = !isPositive;
+      widget.onSortTap(isPositive);
     });
   }
 }

@@ -129,7 +129,8 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _contentHeader(model),
-                    if (model.playUrls != null && model.playUrls.length > 0) _playBtn(model),
+                    if (model.playUrls != null && model.playUrls.length > 0)
+                      _playBtn(model),
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 15),
                       child: CommonText(
@@ -147,7 +148,7 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
                     ),
                     MovieSelectionModuleWidget(
                       model.playUrls,
-                      onAssembleTap: (index) {
+                      onAssembleTap: (index, flag) {
                         _jumpVideo(
                           model.homeDetailBeanVod.vodID.toString(),
                           model.playUrls[index][1],
@@ -155,6 +156,7 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
                           model.playUrlType,
                           model.homeDetailBeanVod.vodName,
                           model.playUrls[index][0],
+                          flag ? "1" : "0",
                         );
                       },
                     ),
@@ -364,7 +366,7 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
     return GestureDetector(
       onTap: () {
         _jumpVideo(widget.vodId, model.playUrls[0][1], "0", model.playUrlType,
-            model.homeDetailBeanVod.vodName, model.playUrls[0][0]);
+            model.homeDetailBeanVod.vodName, model.playUrls[0][0], "0");
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
@@ -400,6 +402,7 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
     String playUrlType,
     String videoName,
     String videoLevel,
+    String isPositive,
   ) {
     jumpVideo(
       context,
@@ -409,6 +412,7 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
       playUrlType: playUrlType,
       videoName: videoName,
       videoLevel: videoLevel,
+      isPositive: isPositive,
     );
   }
 

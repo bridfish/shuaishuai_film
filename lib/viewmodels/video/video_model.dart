@@ -10,8 +10,9 @@ class VideoViewModel extends BaseViewModel<MovieRepository> {
   String videoName;
   String videoLevel;
   String currentTime;
+  String isPositive;
 
-  VideoViewModel({this.videoId, this.videoUrl, this.playUrlType, this.playUrlIndex, this.videoName, this.videoLevel, this.currentTime});
+  VideoViewModel({this.videoId, this.videoUrl, this.playUrlType, this.playUrlIndex, this.videoName, this.videoLevel, this.currentTime, this.isPositive});
 
   HomeDetailBeanEntity _homeDetailBeanEntity;
 
@@ -47,6 +48,10 @@ class VideoViewModel extends BaseViewModel<MovieRepository> {
     } else {
       setError(new Error(), message: "请求失败");
     }
+  }
+
+  void setPositive(String isPositive) {
+    this.isPositive = isPositive;
   }
 
   @override

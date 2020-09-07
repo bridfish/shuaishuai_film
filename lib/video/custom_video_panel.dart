@@ -79,6 +79,7 @@ class __FijkPanel2State extends State<_FijkPanel2> {
   bool _dragLeft;
   double _volume;
   double _brightness;
+  double _currentPosPx;
 
   double _seekPos = -1.0;
   Duration _duration = Duration();
@@ -249,11 +250,15 @@ class __FijkPanel2State extends State<_FijkPanel2> {
         });
       });
     }
-    
+
     _statelessTimer?.cancel();
     _statelessTimer = Timer(const Duration(milliseconds: 2000), () {
       setState(() {});
     });
+  }
+
+  void onHorizontalDragStartFun(DragStartDetails d) {
+    _currentPosPx = d.localPosition.dx;
   }
 
   void onVerticalDragUpdateFun(DragUpdateDetails d) {
@@ -280,9 +285,21 @@ class __FijkPanel2State extends State<_FijkPanel2> {
     }
   }
 
-  void onVerticalDragEndFun(DragEndDetails e) {
+  void onHorizontalDragUpdateFun(DragUpdateDetails d) {
+    var currentPos = (d.localPosition.dx - _currentPosPx)
+        / panelWidth() * dura2double(_duration);
+    if (currentPos != _currentPos.inMilliseconds) {
+      print("shuaishuai...$currentPos");
+    }
+  }
+
+  void onVerticalDragEndFun(DragEndDetails d) {
     _volume = null;
     _brightness = null;
+  }
+
+  void onHorizontalDragEndFun(DragEndDetails d) {
+    _currentPosPx = null;
   }
 
   Widget buildPlayButton(BuildContext context, double height) {
@@ -396,7 +413,6 @@ class __FijkPanel2State extends State<_FijkPanel2> {
   }
 
   Widget buildPanel(BuildContext context) {
-    print("shuaishuai.......");
     double height = panelHeight();
 
     bool fullScreen = player.value.fullScreen;
@@ -447,7 +463,7 @@ class __FijkPanel2State extends State<_FijkPanel2> {
               ),
             ),
             if (widget.onBack != null) buildBack(context),
-            if(fullScreen) buildTitleText(context),
+            if (fullScreen) buildTitleText(context),
           ],
         ),
         Expanded(
@@ -480,7 +496,9 @@ class __FijkPanel2State extends State<_FijkPanel2> {
       onVerticalDragUpdate: onVerticalDragUpdateFun,
       onVerticalDragStart: onVerticalDragStartFun,
       onVerticalDragEnd: onVerticalDragEndFun,
-      onHorizontalDragUpdate: (d) {},
+      onHorizontalDragUpdate: onHorizontalDragUpdateFun,
+      onHorizontalDragStart: onHorizontalDragStartFun,
+      onHorizontalDragEnd: onHorizontalDragEndFun,
       child: AbsorbPointer(
         absorbing: _hideStuff,
         child: AnimatedOpacity(
@@ -547,7 +565,7 @@ class __FijkPanel2State extends State<_FijkPanel2> {
   }
 
   Widget buildStateless() {
-    if (_volume != null || _brightness != null) {
+    if (_volume != null || _brightness != null || _currentPosPx != null) {
       Widget toast = _volume == null
           ? defaultFijkBrightnessToast(_brightness, _valController.stream)
           : defaultFijkVolumeToast(_volume, _valController.stream);

@@ -30,12 +30,16 @@ class ShuaiVideo extends StatefulWidget {
 
 class _ShuaiVideoState extends State<ShuaiVideo> {
   FijkPlayer _fijkPlayer;
+
   StreamSubscription _streamSubscription;
+  StreamSubscription _posUpdateSubscription;
+
   int _lastInMilliseconds = 0;
   int _totalInMilliseconds;
   bool _isAllowMobilePlay = false;
   ValueNotifier<bool> _offStageNotifier = ValueNotifier(true);
   String videoUrl;
+
 
   @override
   void initState() {
@@ -63,11 +67,20 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
 
     if (_fijkPlayer == null) {
       _fijkPlayer = FijkPlayer();
+
+      _fijkPlayer.addListener(_addVideoListener);
+
       //设置视频资源
       await _fijkPlayer.setDataSource(videoUrl,
           autoPlay: autoPlay, showCover: true);
 
-      _fijkPlayer.addListener(_addVideoListener);
+      _posUpdateSubscription =  _fijkPlayer.onCurrentPosUpdate.listen((event) {
+        _totalInMilliseconds = _fijkPlayer.value.duration?.inMilliseconds;
+        final currentMilliseconds = event.inMilliseconds;
+        if (currentMilliseconds > _lastInMilliseconds) {
+          _lastInMilliseconds = currentMilliseconds;
+        }
+      });
 
       setState(() {});
     } else {
@@ -84,12 +97,6 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
     if (_fijkPlayer.state == FijkState.prepared) {
       _fijkPlayer.seekTo(_lastInMilliseconds ?? 0);
     }
-
-    _totalInMilliseconds = _fijkPlayer.value.duration?.inMilliseconds;
-    final currentMilliseconds = _fijkPlayer.currentPos.inMilliseconds;
-    if (currentMilliseconds > _lastInMilliseconds) {
-      _lastInMilliseconds = currentMilliseconds;
-    }
   }
 
   void _playOrPause() {
@@ -104,14 +111,16 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
   }
 
   void _resetFijkPlayer() {
+    _destoryFijkPlayer();
     _isAllowMobilePlay = false;
     _lastInMilliseconds = 0;
     _totalInMilliseconds = null;
     _offStageNotifier.value = true;
-    _destoryFijkPlayer();
   }
 
   void _destoryFijkPlayer() {
+    _posUpdateSubscription?.cancel();
+    _posUpdateSubscription = null;
     _fijkPlayer?.removeListener(_addVideoListener);
     _fijkPlayer?.release();
     _fijkPlayer = null;
@@ -150,6 +159,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
         ..videoLevel = widget.model.videoLevel
         ..playUrlType = widget.model.playUrlType
         ..videoUrl = videoUrl
+        ..isPositive = widget.model.isPositive
         ..playUrlIndex = int.parse(widget.model.playUrlIndex);
 
       if (videoData != null && videoData.length > 0) {

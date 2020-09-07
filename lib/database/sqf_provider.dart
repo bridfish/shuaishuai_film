@@ -20,7 +20,7 @@ class SqfProvider {
        await db.execute(
             'CREATE TABLE ${searchHistoryTable.tableName} (id INTEGER PRIMARY KEY, ${searchHistoryTable.columnName} TEXT)');
        await db.execute(
-            'CREATE TABLE ${videoHistoryTable.tableName} (id INTEGER PRIMARY KEY, ${videoHistoryTable.columnVideoName} TEXT, ${videoHistoryTable.columnPicUrl} TEXT, ${videoHistoryTable.columnUpdateInfo} TEXT, ${videoHistoryTable.columnVideoLevel} TEXT, ${videoHistoryTable.columnPlayUrlType} TEXT,  ${videoHistoryTable.columnVideoUrl} TEXT, ${videoHistoryTable.columnVideoId} INTEGER, ${videoHistoryTable.columnCurrentPlayTime} INTEGER, ${videoHistoryTable.columnTotalPlayTime} INTEGER, ${videoHistoryTable.columnMilliseconds} INTEGER, ${videoHistoryTable.columnPlayUrlIndex} INTEGER)')
+            'CREATE TABLE ${videoHistoryTable.tableName} (id INTEGER PRIMARY KEY, ${videoHistoryTable.columnVideoName} TEXT, ${videoHistoryTable.columnPicUrl} TEXT, ${videoHistoryTable.columnUpdateInfo} TEXT, ${videoHistoryTable.columnVideoLevel} TEXT, ${videoHistoryTable.columnPlayUrlType} TEXT,  ${videoHistoryTable.columnVideoUrl} TEXT, ${videoHistoryTable.columnVideoIsPositive} TEXT, ${videoHistoryTable.columnVideoId} INTEGER, ${videoHistoryTable.columnCurrentPlayTime} INTEGER, ${videoHistoryTable.columnTotalPlayTime} INTEGER, ${videoHistoryTable.columnMilliseconds} INTEGER, ${videoHistoryTable.columnPlayUrlIndex} INTEGER)')
        .catchError((error) {
          print(error);
        });

@@ -107,6 +107,7 @@ class _VideoHistoryItemState extends State<VideoHistoryItem> {
             playUrlIndex: bean[videoHistory.columnPlayUrlIndex].toString(),
             videoName: bean[videoHistory.columnVideoName],
             videoLevel: bean[videoHistory.columnVideoLevel],
+            isPositive: bean[videoHistory.columnVideoIsPositive],
             currentTime: bean[videoHistory.columnCurrentPlayTime].toString(),
           );
         }
@@ -210,7 +211,7 @@ class _VideoHistoryItemState extends State<VideoHistoryItem> {
 
   Widget _watchTxt(Map<String, dynamic> map) {
     int ratio = _currentRatio(map);
-    return ratio < 100 ? CommonText("观看至$ratio%") : CommonText("已完成");
+    return ratio < 100 ? CommonText("${widget.bean[videoHistory.columnVideoLevel]}  观看至$ratio%") : CommonText("${widget.bean[videoHistory.columnVideoLevel]}  已完成");
   }
 
   int _currentRatio(Map<String, dynamic> map) {
