@@ -102,10 +102,12 @@ class _VideoPageState extends State<VideoPage> {
           model.playUrls,
           selectedIndex: int.parse(model.playUrlIndex),
           isPositive: widget.isPositive,
-          onAssembleTap: (index, _) {
+          onAssembleTap: (index, isPositive) {
+            final tempIndex = model.playUrls.length - 1 - index;
             if (model.playUrlIndex != index.toString()) {
               model.changeVideo(index);
               model.playUrlIndex = index.toString();
+              model.videoLevel = isPositive ? model.playUrls[tempIndex][0]: model.playUrls[index][0];
             }
           },
           onSortTap: (flag) {

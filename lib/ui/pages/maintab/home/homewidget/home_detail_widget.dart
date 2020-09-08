@@ -56,7 +56,10 @@ class HomeDetailBackGroundWidget extends StatelessWidget {
 
 class MovieSelectionModuleWidget extends StatefulWidget {
   MovieSelectionModuleWidget(this.playUrls,
-      {this.onAssembleTap, this.onSortTap, this.selectedIndex, this.isPositive = "0"});
+      {this.onAssembleTap,
+      this.onSortTap,
+      this.selectedIndex,
+      this.isPositive = "0"});
 
   List<List> playUrls;
   int selectedIndex;
@@ -300,6 +303,7 @@ class _MovieSelectionListState extends State<MovieSelectionList> {
 
   @override
   Widget build(BuildContext context) {
+    print("shuaishuai.......$isPositive");
     isPositive = widget.isPositive == "0" ? false : true;
     playUrls =
         isPositive ? widget.playUrls?.reversed?.toList() : widget.playUrls;
@@ -391,7 +395,8 @@ class _MovieSelectionListState extends State<MovieSelectionList> {
   void reversedSelection() {
     setState(() {
       isPositive = !isPositive;
-      widget.onSortTap(isPositive);
+      widget.isPositive = isPositive ? "1" : "0";
+      if (widget.onSortTap != null) widget.onSortTap(isPositive);
     });
   }
 }

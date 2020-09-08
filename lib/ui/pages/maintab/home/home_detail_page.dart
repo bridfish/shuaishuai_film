@@ -149,13 +149,14 @@ class _HomeDetailPageState extends State<HomeDetailPage> {
                     MovieSelectionModuleWidget(
                       model.playUrls,
                       onAssembleTap: (index, flag) {
+                         final tempIndex = flag ? model.playUrls.length - 1 - index : index;
                         _jumpVideo(
                           model.homeDetailBeanVod.vodID.toString(),
-                          model.playUrls[index][1],
+                          model.playUrls[tempIndex][1],
                           index.toString(),
                           model.playUrlType,
                           model.homeDetailBeanVod.vodName,
-                          model.playUrls[index][0],
+                          model.playUrls[tempIndex][0],
                           flag ? "1" : "0",
                         );
                       },
