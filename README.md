@@ -25,6 +25,13 @@
 |  shared_preferences  | shared存储 | https://pub.dev/packages?q=shared_preferences |
 
 # 更新
+
+## V1.1.0 `2020-09-08` 
+- 修复视频快速切换bug
+- 视频播放器添加手势滑动调整音量和亮度
+- 修改文字搜索历史逻辑
+- 修改部分icon图标
+
 ## V1.0.0 `2020-08-19` 
 - 添加留言模块
 - 添加历史记录可以点击继续观看功能
