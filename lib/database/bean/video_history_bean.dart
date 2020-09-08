@@ -10,6 +10,7 @@ final String columnVideoLevel = "video_level";
 final String columnPlayUrlType = "play_url_type";
 final String columnPlayUrlIndex = "play_url_index";
 final String columnVideoUrl = "video_url";
+final String columnVideoIsPositive = "video_ispositive";
 
 class VideoHistoryBean {
   String picUrl;
@@ -18,6 +19,7 @@ class VideoHistoryBean {
   String videoLevel;
   String playUrlType;
   String videoUrl;
+  String isPositive;
   int videoId;
   int currentPlayTime;
   int totalPlayTime;
@@ -37,6 +39,7 @@ class VideoHistoryBean {
       columnPlayUrlType: playUrlType,
       columnVideoLevel: videoLevel,
       columnVideoUrl: videoUrl,
+      columnVideoIsPositive: isPositive,
     };
 
     return map;

@@ -23,6 +23,7 @@ dependencies:
   video_player: ^0.10.11+2
   shared_preferences: ^0.5.8
   package_info: ^0.4.3
+  fijkplayer: ^0.8.7
 
   r_dart_library:
     git:
