@@ -65,7 +65,7 @@ class MovieSelectionModuleWidget extends StatefulWidget {
   int selectedIndex;
   String isPositive;
   Value2Changed onAssembleTap;
-  ValueChanged onSortTap;
+  Value2Changed onSortTap;
 
   @override
   _MovieSelectionModuleWidgetState createState() =>
@@ -288,7 +288,7 @@ class MovieSelectionList extends StatefulWidget {
 
   List<List> playUrls;
   Value2Changed onAssembleTap;
-  ValueChanged onSortTap;
+  Value2Changed onSortTap;
   int selectedIndex;
   String isPositive;
 
@@ -356,7 +356,10 @@ class _MovieSelectionListState extends State<MovieSelectionList> {
   Widget _selectionBtnWidget(SelectionBean selectionBean, int playUrlIndex) {
     return GestureDetector(
       onTap: () {
-        widget.onAssembleTap(playUrlIndex, isPositive);
+        if (widget.selectedIndex != playUrlIndex) {
+          widget.selectedIndex = playUrlIndex;
+          widget.onAssembleTap(playUrlIndex, isPositive);
+        }
       },
       child: Container(
         alignment: Alignment.center,
@@ -396,7 +399,13 @@ class _MovieSelectionListState extends State<MovieSelectionList> {
     setState(() {
       isPositive = !isPositive;
       widget.isPositive = isPositive ? "1" : "0";
-      if (widget.onSortTap != null) widget.onSortTap(isPositive);
+
+      if (widget.onSortTap != null) {
+        widget.selectedIndex =
+            widget.playUrls.length - 1 - widget.selectedIndex;
+        widget.onSortTap(widget.selectedIndex, isPositive);
+      }
+
     });
   }
 }

@@ -289,7 +289,7 @@ class __FijkPanel2State extends State<_FijkPanel2> {
     var currentPos = (d.localPosition.dx - _currentPosPx)
         / panelWidth() * dura2double(_duration);
     if (currentPos != _currentPos.inMilliseconds) {
-      print("shuaishuai...$currentPos");
+
     }
   }
 

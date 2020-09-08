@@ -76,7 +76,7 @@ var videoHandler = Handler(
     videoName: videoName,
     videoLevel: videoLevel,
     playUrlType: playUrlType,
-    playUrlIndex: playUrlIndex,
+    playUrlIndex: int.parse(playUrlIndex),
     currentTime: currentTime,
     isPositive: isPositive,
   );

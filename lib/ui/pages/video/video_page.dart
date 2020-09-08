@@ -22,7 +22,7 @@ class VideoPage extends StatefulWidget {
   String videoId;
   String videoUrl;
   String playUrlType;
-  String playUrlIndex;
+  int playUrlIndex;
   String videoName;
   String videoLevel;
   String currentTime;
@@ -100,17 +100,13 @@ class _VideoPageState extends State<VideoPage> {
         padding: EdgeInsets.all(15),
         child: MovieSelectionModuleWidget(
           model.playUrls,
-          selectedIndex: int.parse(model.playUrlIndex),
-          isPositive: widget.isPositive,
+          selectedIndex: model.playUrlIndex,
+          isPositive: model.isPositive,
           onAssembleTap: (index, isPositive) {
-            final tempIndex = model.playUrls.length - 1 - index;
-            if (model.playUrlIndex != index.toString()) {
-              model.changeVideo(index);
-              model.playUrlIndex = index.toString();
-              model.videoLevel = isPositive ? model.playUrls[tempIndex][0]: model.playUrls[index][0];
-            }
+            model.changeVideo(index, isPositive);
           },
-          onSortTap: (flag) {
+          onSortTap: (index, flag) {
+            model.playUrlIndex = index;
             model.setPositive(flag ? "1" : "0");
           },
         ),

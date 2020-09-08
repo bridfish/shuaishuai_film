@@ -160,7 +160,7 @@ class _ShuaiVideoState extends State<ShuaiVideo> {
         ..playUrlType = widget.model.playUrlType
         ..videoUrl = videoUrl
         ..isPositive = widget.model.isPositive
-        ..playUrlIndex = int.parse(widget.model.playUrlIndex);
+        ..playUrlIndex = widget.model.playUrlIndex;
 
       if (videoData != null && videoData.length > 0) {
         await txn.update(videoHistory.tableName, videoHistoryBean.toMap(),
