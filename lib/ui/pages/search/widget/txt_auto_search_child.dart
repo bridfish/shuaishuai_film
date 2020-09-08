@@ -3,6 +3,7 @@ import 'package:shuaishuaimovie/models/common_item_bean_entity.dart';
 import 'package:shuaishuaimovie/provider/provider_widget.dart';
 import 'package:shuaishuaimovie/res/app_color.dart';
 import 'package:shuaishuaimovie/routes/route_jump.dart';
+import 'package:shuaishuaimovie/ui/helper/db/db_operate.dart';
 import 'package:shuaishuaimovie/viewmodels/search/txt_auto_search_model.dart';
 
 class TxtAutoSearchChild extends StatefulWidget {
@@ -34,6 +35,7 @@ class TxtAutoSearchChildState extends State<TxtAutoSearchChild> {
                 onTap: () {
                   widget.jumpCallback();
                   jumpHomeDetail(context, bean.vodID.toString(), bean.vodPic);
+                  insertHistorySearchDBTxt(bean.vodName);
                 },
                 title: Text.rich(
                   TextSpan(children: [
@@ -73,4 +75,6 @@ class TxtAutoSearchChildState extends State<TxtAutoSearchChild> {
   void resetData() {
     model.clearData();
   }
+
+
 }

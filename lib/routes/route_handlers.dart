@@ -68,14 +68,17 @@ var videoHandler = Handler(
   var videoName = params["videoName"][0];
   var videoLevel = params["videoLevel"][0];
   var currentTime = params["currentTime"][0];
+  var isPositive = params["isPositive"][0];
+
   return VideoPage(
     videoId: videoId,
     videoUrl: videoUrl,
     videoName: videoName,
     videoLevel: videoLevel,
     playUrlType: playUrlType,
-    playUrlIndex: playUrlIndex,
+    playUrlIndex: int.parse(playUrlIndex),
     currentTime: currentTime,
+    isPositive: isPositive,
   );
 });
 

@@ -119,7 +119,7 @@ class AppBarContent extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.all(5),
                         child: Icon(
-                          Icons.filter_list,
+                          IconData(0xe600, fontFamily: "appIconFonts"),
                           color: iconColor ??
                               context.watch<AppTheme>().iconThemeColor,
                         ),

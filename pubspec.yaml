@@ -1,7 +1,7 @@
 name: shuaishuaimovie
 description: A new Flutter application.
 publish_to: none
-version: 1.0.0+1
+version: 1.1.0
 environment:
   sdk: '>=2.7.0 <3.0.0'
 dependencies:
@@ -22,6 +22,8 @@ dependencies:
   chewie: ^0.9.10
   video_player: ^0.10.11+2
   shared_preferences: ^0.5.8
+  package_info: ^0.4.3
+  fijkplayer: ^0.8.7
 
   r_dart_library:
     git:
@@ -40,4 +42,5 @@ flr:
   core_version: 3.1.0
   dartfmt_line_length: 80
   assets:
+
 

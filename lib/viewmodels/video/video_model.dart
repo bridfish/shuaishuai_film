@@ -6,12 +6,13 @@ class VideoViewModel extends BaseViewModel<MovieRepository> {
   String videoId;
   String videoUrl;
   String playUrlType;
-  String playUrlIndex;
+  int playUrlIndex;
   String videoName;
   String videoLevel;
   String currentTime;
+  String isPositive;
 
-  VideoViewModel({this.videoId, this.videoUrl, this.playUrlType, this.playUrlIndex, this.videoName, this.videoLevel, this.currentTime});
+  VideoViewModel({this.videoId, this.videoUrl, this.playUrlType, this.playUrlIndex, this.videoName, this.videoLevel, this.currentTime, this.isPositive});
 
   HomeDetailBeanEntity _homeDetailBeanEntity;
 
@@ -25,13 +26,19 @@ class VideoViewModel extends BaseViewModel<MovieRepository> {
 
   String get videoTitle {
     if(homeDetailBeanVod == null) return "";
-    return homeDetailBeanVod.vodName + " " + playUrls[int.parse(playUrlIndex)][0];
+    final tempPlayUrls =
+    (isPositive == "0" ? false : true) ? playUrls.reversed.toList() : playUrls;
+    return homeDetailBeanVod.vodName + " " + tempPlayUrls[playUrlIndex][0];
   }
 
-  void changeVideo(int index) {
-    playUrlIndex = index.toString();
-    videoUrl = playUrls[index][1];
-    videoLevel = playUrls[index][0];
+  void changeVideo(int index, bool isPositive) {
+    final tempPlayUrls =
+    isPositive ? playUrls.reversed.toList() : playUrls;
+
+    playUrlIndex = index;
+    videoUrl = tempPlayUrls[index][1];
+    videoLevel = tempPlayUrls[index][0];
+
     notifyListeners();
   }
 
@@ -47,6 +54,10 @@ class VideoViewModel extends BaseViewModel<MovieRepository> {
     } else {
       setError(new Error(), message: "请求失败");
     }
+  }
+
+  void setPositive(String isPositive) {
+    this.isPositive = isPositive;
   }
 
   @override

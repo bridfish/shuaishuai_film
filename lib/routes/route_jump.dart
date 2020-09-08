@@ -48,11 +48,12 @@ jumpVideo(context,
     String playUrlIndex,
     String videoName,
     String videoLevel,
+    String isPositive,
     String currentTime = ""}) {
   Application.router.navigateTo(
     context,
     Routes.video +
-        "/$videoId/${Uri.encodeComponent(videoUrl)}/$playUrlType/$playUrlIndex/$videoName/$videoLevel/$currentTime",
+        "/$videoId/${Uri.encodeComponent(videoUrl)}/$playUrlType/$playUrlIndex/$videoName/$videoLevel/$currentTime/$isPositive",
     transition: TransitionType.cupertino,
   );
 }

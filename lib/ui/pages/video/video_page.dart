@@ -8,23 +8,25 @@ import 'package:shuaishuaimovie/ui/pages/video/widget/shuai_video.dart';
 import 'package:shuaishuaimovie/viewmodels/video/video_model.dart';
 
 class VideoPage extends StatefulWidget {
-  VideoPage(
-      {@required this.videoId,
-      @required this.videoUrl,
-      @required this.videoName,
-      @required this.videoLevel,
-      @required this.playUrlType,
-      @required this.playUrlIndex,
-        this.currentTime,
-      });
+  VideoPage({
+    @required this.videoId,
+    @required this.videoUrl,
+    @required this.videoName,
+    @required this.videoLevel,
+    @required this.playUrlType,
+    @required this.playUrlIndex,
+    @required this.isPositive,
+    this.currentTime,
+  });
 
   String videoId;
   String videoUrl;
   String playUrlType;
-  String playUrlIndex;
+  int playUrlIndex;
   String videoName;
   String videoLevel;
   String currentTime;
+  String isPositive;
 
   static const String BASE_VIDEO_URL = "https://vip1.sp-flv.com/p2p/?v=";
 
@@ -66,6 +68,7 @@ class _VideoPageState extends State<VideoPage> {
               videoName: widget.videoName,
               videoLevel: widget.videoLevel,
               currentTime: widget.currentTime,
+              isPositive: widget.isPositive,
             ),
             builder:
                 (BuildContext context, VideoViewModel model, Widget child) {
@@ -97,9 +100,14 @@ class _VideoPageState extends State<VideoPage> {
         padding: EdgeInsets.all(15),
         child: MovieSelectionModuleWidget(
           model.playUrls,
-          selectedIndex: int.parse(model.playUrlIndex),
-          onAssembleTap: (index) {
-            model.changeVideo(index);
+          selectedIndex: model.playUrlIndex,
+          isPositive: model.isPositive,
+          onAssembleTap: (index, isPositive) {
+            model.changeVideo(index, isPositive);
+          },
+          onSortTap: (index, flag) {
+            model.playUrlIndex = index;
+            model.setPositive(flag ? "1" : "0");
           },
         ),
       ),
