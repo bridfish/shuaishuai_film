@@ -1,5 +1,5 @@
 class RequestConstApi{
-  static const SERVICE_API = 'https://vip.88-spa.com/v1/';
+  static const SERVICE_API = 'https://vip.88-spa.com:8443/v1/';
   static const HOME_API = SERVICE_API + "home-list";
   static const HOME_DETAIL_API = SERVICE_API + "vod-details";
   static const HOT_UPDATE_API = SERVICE_API + "map";
